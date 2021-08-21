@@ -8,6 +8,7 @@ import { formatDate } from '../lib/formatDate';
 import styles from './home.module.scss';
 import { FiCalendar, FiUser } from 'react-icons/fi'
 import { useState } from 'react';
+import Link from 'next/link';
 
 
 interface Post {
@@ -35,7 +36,7 @@ export default function Home({ postsPagination }: HomeProps) {
 
 
   async function handleClick() {
-    fetch(postsPagination.next_page).then(response => {
+    fetch(nextPage).then(response => {
       return response.json();
     }).then((response: PostPagination) => {
       setNextPage(response.next_page);
@@ -60,23 +61,25 @@ export default function Home({ postsPagination }: HomeProps) {
       <div className={styles.post}>
         {posts.map(post => {
           return (
-            <a href="" key={post.uid}>
-              <strong>{post.data.title}</strong>
-              <p>{post.data.subtitle}</p>
-              <div className={styles.postFooter}>
-                <div >
-                  <FiCalendar />
-                  <time>{post.first_publication_date}</time>
-                </div>
-                <div >
-                  <FiUser />
-                  <span>
-                    {post.data.author}
-                  </span>
+            <Link key={post.uid} href={`/${post.uid}`}>
+              <a href="" >
+                <strong>{post.data.title}</strong>
+                <p>{post.data.subtitle}</p>
+                <div className={styles.postFooter}>
+                  <div >
+                    <FiCalendar />
+                    <time>{post.first_publication_date}</time>
+                  </div>
+                  <div >
+                    <FiUser />
+                    <span>
+                      {post.data.author}
+                    </span>
 
+                  </div>
                 </div>
-              </div>
-            </a>
+              </a>
+            </Link>
           )
         })}
       </div>
