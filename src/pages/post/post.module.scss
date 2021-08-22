@@ -1,1 +1,76 @@
-// TODO
+.container{
+  margin: 5rem auto 0;
+  max-width: 720px;
+
+  h1{
+    font-weight: 700;
+    font-size: 3rem;
+    line-height: 3.625rem;
+  }
+
+  .iconsContainer {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    
+    svg {
+      display: inline-block;
+      margin-left: 1.5rem;
+      width: 20px;
+      height: 20px
+    }
+
+    svg:first-child {
+      margin-left:0;
+    }
+
+    span, time{
+      margin-left: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1rem;
+    }
+  }
+}
+
+.content{
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.575rem;
+
+  h1{
+    margin: 4rem 0;
+  }
+  
+  div{
+    margin-top: 2rem;
+    color: var(--gray-400);
+    p, strong, ul, li{
+      padding: 0;
+      outline: 0;
+      line-height: 1.575rem;
+      margin-top: 1rem;
+    }
+
+    ul {
+      display:block;
+      margin-block-start: 1rem;
+      margin-block-end: 1rem;
+      padding-inline-start: 40px;
+    }
+
+    a{
+      color: #6ab7f1;
+
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.loading{
+  font-size: 1.5rem;
+  margin: 5rem 0 0 13.125rem;
+}

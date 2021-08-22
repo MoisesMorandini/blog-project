@@ -33,8 +33,6 @@ interface HomeProps {
 export default function Home({ postsPagination }: HomeProps) {
   const [nextPage, setNextPage] = useState<string>(postsPagination.next_page);
   const [posts, setPosts] = useState<Post[]>(postsPagination.results);
-
-
   async function handleClick() {
     fetch(nextPage).then(response => {
       return response.json();
@@ -61,7 +59,7 @@ export default function Home({ postsPagination }: HomeProps) {
       <div className={styles.post}>
         {posts.map(post => {
           return (
-            <Link key={post.uid} href={`/${post.uid}`}>
+            <Link key={post.uid} href={`/post/${post.uid}`}>
               <a href="" >
                 <strong>{post.data.title}</strong>
                 <p>{post.data.subtitle}</p>
