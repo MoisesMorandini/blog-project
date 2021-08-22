@@ -40,9 +40,9 @@ export default function Post({ post }: PostProps) {
   function calcTotalMinutesToRead(): number {
     const totalWords = post.data.content.reduce((total, postContent) => {
       const totalBody = postContent.body.reduce((total, bodyContent) => {
-        return total + bodyContent.text.length
+        return total + bodyContent.text.split(' ').length
       }, 0)
-      return total + totalBody + postContent.heading.length;
+      return total + totalBody + postContent.heading.split(' ').length;
     }, 0)
     return Math.ceil(totalWords / 200)
   }
