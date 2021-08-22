@@ -58,7 +58,7 @@ export default function Post({ post }: PostProps) {
               <h1>{post.data.title}</h1>
               <div className={styles.iconsContainer}>
                 <FiCalendar />
-                <time>{post.first_publication_date}</time>
+                <time>{formatDate(new Date(post.first_publication_date))}</time>
                 <FiUser />
                 <span>{post.data.author}</span>
                 <FiClock />
@@ -94,7 +94,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   );
 
   const slugs = posts.results.map(post => {
-    return `/post/${post.uid}`
+    return {
+      params: {
+        slug: post.uid,
+      }
+    }
   })
 
   return {
@@ -112,12 +116,13 @@ export const getStaticProps: GetStaticProps = async context => {
     {}
   );
 
-  const post: Post = {
-
-    first_publication_date: formatDate(new Date(response.first_publication_date)),
+  const post = {
+    uid: response.uid,
+    first_publication_date: response.first_publication_date,
     data: {
       title: response.data.title,
       author: response.data.author,
+      subtitle: response.data.subtitle,
       content: response.data.content.map(content => {
         return {
           heading: content.heading,

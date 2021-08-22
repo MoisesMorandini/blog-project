@@ -66,7 +66,7 @@ export default function Home({ postsPagination }: HomeProps) {
                 <div className={styles.postFooter}>
                   <div >
                     <FiCalendar />
-                    <time>{post.first_publication_date}</time>
+                    <time>{formatDate(new Date(post.first_publication_date))}</time>
                   </div>
                   <div >
                     <FiUser />
@@ -104,10 +104,10 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const nextPage = postsResponse.next_page;
 
-  const results: Post[] = postsResponse.results.map(post => {
+  const results = postsResponse.results.map(post => {
     return {
       uid: post.uid,
-      first_publication_date: formatDate(new Date(post.first_publication_date)),
+      first_publication_date: post.first_publication_date,
       data: {
         title: post.data.title,
         subtitle: post.data.subtitle,
