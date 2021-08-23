@@ -1,18 +1,21 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+
 import Prismic from '@prismicio/client';
 import { getPrismicClient } from '../../services/prismic';
+import { RichText } from 'prismic-dom';
+
+import { formatDate } from '../../lib/formatDate';
+
+import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
+
+import Header from '../../components/Header'
+import { Comments } from '../../components/Comments';
+import { Preview } from '../../components/Preview';
 
 import styles from './post.module.scss';
 
-import Header from '../../components/Header'
-import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
-
-import { formatDate } from '../../lib/formatDate';
-import { RichText } from 'prismic-dom';
-import { Comments } from '../../components/Comments';
-import { Preview } from '../../components/Preview';
 
 interface Post {
   first_publication_date: string | null;
@@ -31,12 +34,19 @@ interface Post {
   };
 }
 
+interface ClosestPost {
+  uid: string;
+  title: string;
+}
+
 interface PostProps {
   post: Post;
   preview: boolean;
+  nextPost: ClosestPost,
+  previousPost: ClosestPost
 }
 
-export default function Post({ post, preview }: PostProps) {
+export default function Post({ post, preview, nextPost, previousPost }: PostProps) {
   const router = useRouter();
   const totalMinutes = calcTotalMinutesToRead();
 
@@ -78,6 +88,32 @@ export default function Post({ post, preview }: PostProps) {
                   )
                 })
               }
+              <div className={styles.closestPost}>
+                <div>
+                  {
+                    previousPost && (
+                      <>
+                        <aside>{previousPost.title}</aside>
+                        <Link href={`/post/${previousPost.uid}`}>
+                          <a href="">Post anterior</a>
+                        </Link>
+                      </>
+                    )
+                  }
+                </div>
+                <div>
+                  {
+                    nextPost && (
+                      <>
+                        <aside>{nextPost.title}</aside>
+                        <Link href={`/post/${nextPost.uid}`}>
+                          <a href="">Próximo post</a>
+                        </Link>
+                      </>
+                    )
+                  }
+                </div>
+              </div>
               <Comments />
               {preview && (
                 <Preview />
@@ -95,7 +131,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await prismic.query(
     [Prismic.Predicates.at('document.type', 'posts')],
     {
-      orderings: '[post.first_publication_date desc]',
+      orderings: '[document.first_publication_date desc]',
       pageSize: 3
     }
   );
@@ -145,10 +181,37 @@ export const getStaticProps: GetStaticProps = async ({ params, preview = false,
     }
   }
 
+  const before = await prismic.queryFirst(
+    [Prismic.Predicates.dateBefore('document.first_publication_date', new Date(post.first_publication_date))],
+    {
+      orderings: '[document.first_publication_date desc]',
+      pageSize: 1
+    },
+  )
+  const after = await prismic.queryFirst(
+    [Prismic.Predicates.dateAfter('document.first_publication_date', new Date(post.first_publication_date))],
+    {
+      orderings: '[document.first_publication_date]',
+      pageSize: 1
+    }
+  )
+
+  const previousPost = before ? {
+    uid: before?.uid,
+    title: before?.data.title
+  } : null;
+
+  const nextPost = after ? {
+    uid: after?.uid,
+    title: after?.data.title
+  } : null;
+
   return {
     props: {
       post,
-      preview
+      preview,
+      nextPost,
+      previousPost
     },
   }
 };

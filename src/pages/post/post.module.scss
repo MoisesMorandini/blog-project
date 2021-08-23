@@ -74,3 +74,39 @@
   font-size: 1.5rem;
   margin: 5rem 0 0 13.125rem;
 }
+
+.closestPost{
+  margin-top: 3.75rem;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+
+  div{
+    margin-top: 3rem;
+    max-width: 300px;
+
+    & + div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    aside {
+      font-weight: 400;
+      font-size: 1.125rem;
+      line-height: 1.36rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    a {
+      font-weight: 600;
+      size: 1rem;
+      line-height: 1.21rem;
+      color: var(--pink);
+    }
+  }
+  
+}
