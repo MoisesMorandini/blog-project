@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Prismic from '@prismicio/client';
 import { getPrismicClient } from '../../services/prismic';
 
-import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 
 import Header from '../../components/Header'
@@ -11,6 +10,7 @@ import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 
 import { formatDate } from '../../lib/formatDate';
 import { RichText } from 'prismic-dom';
+import { Comments } from '../../components/Comments';
 
 interface Post {
   first_publication_date: string | null;
@@ -79,6 +79,7 @@ export default function Post({ post }: PostProps) {
           </>
         ) : <span className={styles.loading}>Carregando...</span>
       }
+      <Comments />
     </>
   )
 }
