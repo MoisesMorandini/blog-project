@@ -9,6 +9,7 @@ import styles from './home.module.scss';
 import { FiCalendar, FiUser } from 'react-icons/fi'
 import { useState } from 'react';
 import Link from 'next/link';
+import { Preview } from '../components/Preview';
 
 
 interface Post {
@@ -28,9 +29,10 @@ interface PostPagination {
 
 interface HomeProps {
   postsPagination: PostPagination;
+  preview: boolean;
 }
 
-export default function Home({ postsPagination }: HomeProps) {
+export default function Home({ postsPagination, preview }: HomeProps) {
   const [nextPage, setNextPage] = useState<string>(postsPagination.next_page);
   const [posts, setPosts] = useState<Post[]>(postsPagination.results);
   async function handleClick() {
@@ -87,17 +89,25 @@ export default function Home({ postsPagination }: HomeProps) {
           </button>
         )
       }
+      {preview && (
+        <Preview />
+      )}
+
     </main >
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async ({
+  preview = false,
+  previewData
+}) => {
   const prismic = getPrismicClient();
   const postsResponse = await prismic.query(
     [Prismic.Predicates.at('document.type', 'posts')],
     {
       fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
-      pageSize: 1
+      pageSize: 2,
+      ref: previewData?.ref ?? null
     }
   );
 
@@ -120,7 +130,8 @@ export const getStaticProps: GetStaticProps = async () => {
       postsPagination: {
         next_page: nextPage,
         results
-      }
+      },
+      preview
     }
   }
 };
