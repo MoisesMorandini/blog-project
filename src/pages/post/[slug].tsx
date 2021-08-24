@@ -19,6 +19,7 @@ import styles from './post.module.scss';
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     banner: {
@@ -66,7 +67,7 @@ export default function Post({ post, preview, nextPost, previousPost }: PostProp
       {
         !router.isFallback ? (
           <>
-            <img height="400px" width="1440px" src="https://slm-assets.secondlife.com/assets/2775442/view_large/FLORESTA.jpg?1294162518" alt="" />
+            <img height="400px" width="1440px" src={post.data.banner.url} alt="" />
             <main className={styles.container}>
               <h1>{post.data.title}</h1>
               <div className={styles.iconsContainer}>
@@ -77,13 +78,15 @@ export default function Post({ post, preview, nextPost, previousPost }: PostProp
                 <FiClock />
                 <span>{totalMinutes} min</span>
               </div>
+              <div className={styles.lastPublicationDate}>
+                <span>* editado em {formatDate(new Date(post.first_publication_date), "dd MMM yyyy', às 'HH:mm")}</span>
+              </div>
               {
                 post.data.content.map(postContent => {
                   return (
                     <div key={postContent.heading} className={styles.content} >
                       <h1>{postContent.heading}</h1>
                       <div dangerouslySetInnerHTML={{ __html: RichText.asHtml(postContent.body) }} />
-
                     </div>
                   )
                 })
@@ -165,6 +168,7 @@ export const getStaticProps: GetStaticProps = async ({ params, preview = false,
   const post = {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
+    last_publication_date: response.last_publication_date,
     data: {
       title: response.data.title,
       author: response.data.author,
